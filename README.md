@@ -75,8 +75,8 @@ A life-saving web application that bridges the gap between blood donors and pati
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/RakhtSaathi.git
-cd RakhtSaathi
+git clone https://github.com/utkarsh1303803/RakhtSaathi-BloodDonation.git
+cd RakhtSaathi-BloodDonation
 ```
 
 2. **Install dependencies**
@@ -289,7 +289,7 @@ We welcome contributions from the community! Here's how you can help:
 - Update documentation as needed
 
 ### Reporting Issues
-Found a bug or have a suggestion? [Open an issue](https://github.com/yourusername/RakhtSaathi/issues) with:
+Found a bug or have a suggestion? [Open an issue](https://github.com/utkarsh1303803/RakhtSaathi-BloodDonation/issues) with:
 - Clear description of the problem or suggestion
 - Steps to reproduce (for bugs)
 - Expected vs actual behavior
@@ -300,8 +300,8 @@ Found a bug or have a suggestion? [Open an issue](https://github.com/yourusernam
 Need help or have questions?
 
 - 📧 Email: support@rakhtsaathi.com
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/RakhtSaathi/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/RakhtSaathi/discussions)
+- 🐛 Issues: [GitHub Issues](https://github.com/utkarsh1303803/RakhtSaathi-BloodDonation/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/utkarsh1303803/RakhtSaathi-BloodDonation/discussions)
 
 ## 📄 License
 
@@ -331,6 +331,6 @@ If RakhtSaathi has helped you or someone you know, please:
 
 **Every star ⭐ motivates us to save more lives!**
 
-[Report Bug](https://github.com/yourusername/RakhtSaathi/issues) • [Request Feature](https://github.com/yourusername/RakhtSaathi/issues) • [Contribute](CONTRIBUTING.md)
+[Report Bug](https://github.com/utkarsh1303803/RakhtSaathi-BloodDonation/issues) • [Request Feature](https://github.com/utkarsh1303803/RakhtSaathi-BloodDonation/issues) • [Contribute](CONTRIBUTING.md)
 
 </div>
