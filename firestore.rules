@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType == 'ADMIN';
+    }
+    
+    function isDonor() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType == 'DONOR';
+    }
+    
+    function isNeedy() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.userType == 'NEEDY';
+    }
+    
+    // Users collection - basic user profiles
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(userId);
+    }
+    
+    // Donors collection - donor profiles and medical info
+    match /donors/{donorId} {
+      allow read: if isAuthenticated(); // All authenticated users can read donor info for matching
+      allow write: if isAuthenticated() && 
+                      (resource.data.firebaseUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && 
+                       request.resource.data.firebaseUid == request.auth.uid;
+    }
+    
+    // Needy collection - needy user profiles
+    match /needy/{needyId} {
+      allow read: if isAuthenticated() && 
+                     (resource.data.firebaseUid == request.auth.uid || isAdmin());
+      allow write: if isAuthenticated() && 
+                      (resource.data.firebaseUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && 
+                       request.resource.data.firebaseUid == request.auth.uid;
+    }
+    
+    // Blood requests - emergency blood requests
+    match /bloodRequests/{requestId} {
+      allow read: if isAuthenticated(); // All users can read blood requests for emergency response
+      allow create: if isAuthenticated() && isNeedy();
+      allow update: if isAuthenticated() && 
+                       (resource.data.needyFirebaseUid == request.auth.uid || 
+                        isDonor() || 
+                        isAdmin());
+      allow delete: if isAuthenticated() && 
+                       (resource.data.needyFirebaseUid == request.auth.uid || isAdmin());
+    }
+    
+    // Donations - completed donation records
+    match /donations/{donationId} {
+      allow read: if isAuthenticated() && 
+                     (resource.data.donorFirebaseUid == request.auth.uid || 
+                      resource.data.needyFirebaseUid == request.auth.uid || 
+                      isAdmin());
+      allow create: if isAuthenticated() && 
+                       (isDonor() || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Certificates - donation certificates
+    match /certificates/{certificateId} {
+      allow read: if isAuthenticated() && 
+                     (resource.data.donorFirebaseUid == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && 
+                       (isDonor() || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Feedback - user feedback and ratings
+    match /feedback/{feedbackId} {
+      allow read: if isAuthenticated() && 
+                     (resource.data.fromFirebaseUid == request.auth.uid || 
+                      resource.data.toFirebaseUid == request.auth.uid || 
+                      isAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && 
+                       (resource.data.fromFirebaseUid == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+  }
+}
